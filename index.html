@@ -15,9 +15,6 @@
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap">
 <style>
-/* ============================================================
-   Variáveis, Temas e Reset
-   ============================================================ */
 :root {
   --bg: #eef7ea; --surface: #ffffff; --surface-2: #f4faf0;
   --line: #d0e2c9; --line-soft: #e2eedb;
@@ -60,9 +57,6 @@ h1, h2, h3, p { margin: 0; }
 .num { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
 .muted { color: var(--muted); }
 
-/* ============================================================
-   App Bar e Tela de Login
-   ============================================================ */
 .app-bar { position: sticky; top: 0; z-index: 50; background: var(--surface); border-bottom: 1px solid transparent; transition: box-shadow 0.3s var(--ease-smooth); margin-inline: calc(-1 * max(12px, env(safe-area-inset-left, 0px))); padding-inline: max(12px, env(safe-area-inset-left, 0px)); }
 body.scrolled .app-bar { border-bottom-color: var(--line); box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
 .app-bar-inner { max-width: 1120px; margin: 0 auto; display: flex; align-items: center; gap: 12px; padding-top: calc(10px + env(safe-area-inset-top, 0px)); padding-bottom: 10px; min-height: 60px; }
@@ -96,9 +90,6 @@ body.scrolled .app-bar { border-bottom-color: var(--line); box-shadow: 0 4px 12p
 .toggle-auth { text-align: center; font-size: 13px; color: var(--accent); cursor: pointer; font-weight: 600; margin-top: 8px; }
 .toggle-auth:hover { text-decoration: underline; }
 
-/* ============================================================
-   Layout, Botões e Inputs
-   ============================================================ */
 .app { max-width: 1120px; margin-inline: auto; display: grid; gap: 16px; padding-top: 16px; }
 .pane { display: grid; gap: 16px; min-width: 0; animation: paneFadeIn 0.4s var(--ease-smooth) forwards; }
 @keyframes paneFadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
@@ -115,9 +106,6 @@ body.scrolled .app-bar { border-bottom-color: var(--line); box-shadow: 0 4px 12p
 .fld.money { text-align: right; font-family: var(--font-num); }
 select.fld { appearance: none; padding-right: 28px; background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='%235a6b58'><path d='M7 10l5 5 5-5z'/></svg>") no-repeat right 10px center; }
 
-/* ============================================================
-   Calendário, Cards e Listas
-   ============================================================ */
 .month-bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .month-bar h2 { font: 600 20px var(--font-head); min-width: 150px; text-align: center; }
 .month-bar .spacer { flex: 1 1 0; }
@@ -148,7 +136,6 @@ table.rows td.v { text-align: right; font: 500 14px var(--font-num); }
 .x-btn { width: 40px; height: 40px; border: 0; background: transparent; color: var(--muted); border-radius: 50%; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: color 0.2s, background 0.2s, transform 0.1s; }
 .x-btn:hover { color: var(--danger); background: var(--accent-soft); transform: rotate(90deg); }
 
-/* Configurações e Extras */
 .settings-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
 @media (min-width: 820px) { .settings-grid { grid-template-columns: repeat(2, 1fr); } .settings-grid .span-all { grid-column: 1 / -1; } }
 .seg-control { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; background: var(--surface); position: relative; }
@@ -175,7 +162,6 @@ table.rows td.v { text-align: right; font: 500 14px var(--font-num); }
 </head>
 <body>
 
-<!-- TELA DE LOGIN -->
 <div id="login-screen" hidden>
   <div class="login-card">
     <h2 id="auth-title">Entrar no Finanças</h2>
@@ -192,7 +178,6 @@ table.rows td.v { text-align: right; font: 500 14px var(--font-num); }
   </div>
 </div>
 
-<!-- APP PRINCIPAL -->
 <div id="app-screen" hidden>
   <header class="app-bar">
     <div class="app-bar-inner">
@@ -287,15 +272,11 @@ table.rows td.v { text-align: right; font: 500 14px var(--font-num); }
   </nav>
 </div>
 
-<!-- SDK do Firebase -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
 <script>
-/* ============================================================
-   CONFIGURAÇÃO DO FIREBASE
-   ============================================================ */
 const firebaseConfig = {
   apiKey: "AIzaSyArVFKF2LqcfhgNNTtGrULCPaxey-Tlz1Y",
   authDomain: "financas-app-e83ad.firebaseapp.com",
@@ -311,13 +292,9 @@ try {
   auth = firebase.auth();
   db = firebase.firestore();
 } catch (e) {
-  console.error("Erro no Firebase. Verifique as chaves.", e);
-  document.getElementById('login-msg').textContent = "Erro no servidor. Chaves inválidas.";
+  console.error("Erro no Firebase.", e);
 }
 
-/* ============================================================
-   VARIÁVEIS GLOBAIS E UTILITÁRIOS
-   ============================================================ */
 const KINDS = [{k:'entrada',t:'Entrada',sym:'+'},{k:'saida',t:'Saída',sym:'−'},{k:'gasto',t:'Gasto diário',sym:'−'},{k:'cartao',t:'Cartão',sym:'−'},{k:'reserva',t:'Reserva',sym:'−'}];
 const MONTHS = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 const LS_KEY = 'financas-beta1';
@@ -338,9 +315,6 @@ let sel = todayKey();
 let view = {y: parseKey(sel).y, m: parseKey(sel).m};
 let ui = {tab: 'cal', lastTab: 'cal', isRegistering: false};
 
-/* ============================================================
-   LÓGICA DE LOGIN (Username -> Fake Email)
-   ============================================================ */
 $('toggle-auth').onclick = () => {
   ui.isRegistering = !ui.isRegistering;
   $('auth-title').textContent = ui.isRegistering ? 'Criar Conta' : 'Entrar';
@@ -353,7 +327,6 @@ $('btn-auth-submit').onclick = async () => {
   if(!auth) return;
   const username = $('login-user').value.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
   const pass = $('login-pass').value;
-  
   if(username.length < 3) return $('login-msg').textContent = 'O apelido precisa ter 3 letras ou mais.';
   if(pass.length < 6) return $('login-msg').textContent = 'A senha precisa ter 6 caracteres ou mais.';
 
@@ -383,8 +356,6 @@ if(auth) {
       $('user-email').textContent = user.email.replace('@financas.app', '');
       $('login-screen').hidden = true;
       $('app-screen').hidden = false;
-      
-      // Lendo os dados em tempo real do Firestore
       db.collection('users').doc(user.uid).onSnapshot(doc => {
         if(doc.exists) {
           const remote = doc.data();
@@ -394,11 +365,9 @@ if(auth) {
             renderAll();
           }
         } else {
-          // Primeiro login: sobe o estado atual para a nuvem
           db.collection('users').doc(user.uid).set(state);
         }
       });
-      
       $('sync').textContent = 'Sincronizado';
       $('sync').dataset.mode = 'cloud';
       renderAll();
@@ -431,20 +400,15 @@ function touch() {
   }
 }
 
-/* ============================================================
-   CÁLCULOS E RENDERIZAÇÃO
-   ============================================================ */
 function renderAll() {
   const t = state.settings?.theme || 'auto';
   if(t==='auto') document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme',t);
-  
   $('opening').value = state.opening ? String(state.opening).replace('.',',') : '';
   $('lim-g').value = state.limits?.g ? String(state.limits.g).replace('.',',') : '';
   $('lim-l').value = state.limits?.l ? String(state.limits.l).replace('.',',') : '';
   $('lim-y').value = state.limits?.y ? String(state.limits.y).replace('.',',') : '';
   $('lim-r').value = state.limits?.r ? String(state.limits.r).replace('.',',') : '';
   document.querySelectorAll('input[name="theme"]').forEach(r => r.checked = (r.value === t));
-
   renderMonth(); renderDay(); renderBudget(); renderTags(); renderCost();
 }
 
@@ -462,7 +426,6 @@ function renderMonth() {
   $('monthTitle').textContent = MONTHS[view.m]+' '+view.y;
   const first = new Date(view.y,view.m,1).getDay(), dim = daysIn(view.y,view.m);
   let bal = state.opening || 0, h='';
-  
   for(let i=0; i<first; i++) h+='<span></span>';
   for(let d=1; d<=dim; d++) {
     const k = key(view.y,view.m,d);
@@ -536,9 +499,6 @@ window.delCat = (i) => {
   touch(); renderAll();
 };
 
-/* ============================================================
-   NAVEGAÇÃO E CONFIGURAÇÕES
-   ============================================================ */
 window.changeTab = function(name) {
   ui.tab = name;
   ['cal','budget','cost','tags','settings'].forEach(n => $('view'+n.charAt(0).toUpperCase()+n.slice(1)).hidden = (n !== name));
@@ -579,7 +539,6 @@ document.querySelectorAll('input[name="theme"]').forEach(r => {
 
 window.addEventListener('scroll', () => { document.body.classList.toggle('scrolled', window.scrollY > 5); }, {passive: true});
 
-// Inicialização
 renderAll();
 </script>
 </body>
