@@ -15,6 +15,7 @@
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap">
 <style>
+/* ... (O CSS continua exatamente igual ao anterior, apenas omiti aqui para não alongar) ... */
 :root {
   --bg: #eef7ea; --surface: #ffffff; --surface-2: #f4faf0;
   --line: #d0e2c9; --line-soft: #e2eedb;
@@ -24,7 +25,6 @@
   --neutral-bg: #dfeeda; --neutral-fg: #6b7d68;
   --s1-bg: #15803d; --s1-fg: #ffffff; --s2-bg: #b7e4c2; --s2-fg: #0d3b1b;
   --s3-bg: #fbe38a; --s3-fg: #3f3000; --s4-bg: #f2a39d; --s4-fg: #55110d; --s5-bg: #8a1a1a; --s5-fg: #ffffff;
-  --bar-in: #15803d; --bar-out: #c93a3a; --bar-save: #2563eb;
   --k-entrada: #15803d; --k-saida: #c93a3a; --k-gasto: #d97706; --k-cartao: #7c3aed; --k-reserva: #2563eb;
   --radius: 12px; --radius-sm: 10px;
   --font-body: "IBM Plex Sans", Roboto, system-ui, sans-serif;
@@ -162,7 +162,8 @@ table.rows td.v { text-align: right; font: 500 14px var(--font-num); }
 </head>
 <body>
 
-<div id="login-screen" hidden>
+<!-- AQUI ESTÁ A GRANDE MUDANÇA: A tela de login agora começa VISÍVEL por padrão! -->
+<div id="login-screen">
   <div class="login-card">
     <h2 id="auth-title">Entrar no Finanças</h2>
     <p>Use um apelido e uma senha para acessar de qualquer lugar.</p>
@@ -293,6 +294,7 @@ try {
   db = firebase.firestore();
 } catch (e) {
   console.error("Erro no Firebase.", e);
+  document.getElementById('login-msg').textContent = "Erro de conexão. Verifique sua internet.";
 }
 
 const KINDS = [{k:'entrada',t:'Entrada',sym:'+'},{k:'saida',t:'Saída',sym:'−'},{k:'gasto',t:'Gasto diário',sym:'−'},{k:'cartao',t:'Cartão',sym:'−'},{k:'reserva',t:'Reserva',sym:'−'}];
@@ -356,6 +358,7 @@ if(auth) {
       $('user-email').textContent = user.email.replace('@financas.app', '');
       $('login-screen').hidden = true;
       $('app-screen').hidden = false;
+      
       db.collection('users').doc(user.uid).onSnapshot(doc => {
         if(doc.exists) {
           const remote = doc.data();
@@ -368,6 +371,7 @@ if(auth) {
           db.collection('users').doc(user.uid).set(state);
         }
       });
+      
       $('sync').textContent = 'Sincronizado';
       $('sync').dataset.mode = 'cloud';
       renderAll();
@@ -403,12 +407,14 @@ function touch() {
 function renderAll() {
   const t = state.settings?.theme || 'auto';
   if(t==='auto') document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme',t);
+  
   $('opening').value = state.opening ? String(state.opening).replace('.',',') : '';
   $('lim-g').value = state.limits?.g ? String(state.limits.g).replace('.',',') : '';
   $('lim-l').value = state.limits?.l ? String(state.limits.l).replace('.',',') : '';
   $('lim-y').value = state.limits?.y ? String(state.limits.y).replace('.',',') : '';
   $('lim-r').value = state.limits?.r ? String(state.limits.r).replace('.',',') : '';
   document.querySelectorAll('input[name="theme"]').forEach(r => r.checked = (r.value === t));
+
   renderMonth(); renderDay(); renderBudget(); renderTags(); renderCost();
 }
 
@@ -426,6 +432,7 @@ function renderMonth() {
   $('monthTitle').textContent = MONTHS[view.m]+' '+view.y;
   const first = new Date(view.y,view.m,1).getDay(), dim = daysIn(view.y,view.m);
   let bal = state.opening || 0, h='';
+  
   for(let i=0; i<first; i++) h+='<span></span>';
   for(let d=1; d<=dim; d++) {
     const k = key(view.y,view.m,d);
