@@ -4,159 +4,32 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#eef7ea">
-<script>
-  try {
-    var s = JSON.parse(localStorage.getItem('financas-beta1') || 'null');
-    var t = s && s.settings && s.settings.theme;
-    if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
-  } catch(e) {}
-</script>
 <title>Finanças</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap">
 <style>
-:root {
-  --bg: #eef7ea; --surface: #ffffff; --surface-2: #f4faf0;
-  --line: #d0e2c9; --line-soft: #e2eedb;
-  --fg: #1a2a1a; --muted: #5a6b58;
-  --accent: #f0d75c; --accent-fg: #2b2400; --accent-soft: rgba(240,215,92,.38);
-  --field: #ffffff; --danger: #b42318;
-  --neutral-bg: #dfeeda; --neutral-fg: #6b7d68;
-  --s1-bg: #15803d; --s1-fg: #ffffff; --s2-bg: #b7e4c2; --s2-fg: #0d3b1b;
-  --s3-bg: #fbe38a; --s3-fg: #3f3000; --s4-bg: #f2a39d; --s4-fg: #55110d; --s5-bg: #8a1a1a; --s5-fg: #ffffff;
-  --k-entrada: #15803d; --k-saida: #c93a3a; --k-gasto: #d97706; --k-cartao: #7c3aed; --k-reserva: #2563eb;
-  --radius: 12px; --radius-sm: 10px;
-  --font-body: "IBM Plex Sans", Roboto, system-ui, sans-serif;
-  --font-head: "Space Grotesk", "IBM Plex Sans", sans-serif;
-  --font-num: "IBM Plex Mono", ui-monospace, monospace;
-  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #0f1419; --surface: #171f28; --surface-2: #1c2530; --line: #2a3541; --line-soft: #212b36;
-    --fg: #e7ecf1; --muted: #93a0ae; --accent: #6aa9ec; --accent-fg: #08121d; --accent-soft: rgba(106,169,236,.18);
-    --field: #0f1419; --danger: #ff8f86; --neutral-bg: #212b36; --neutral-fg: #8190a0;
-    --k-entrada: #3fb96a; --k-saida: #f0716b; --k-gasto: #f5a623; --k-cartao: #a78bfa; --k-reserva: #6aa9ec;
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --bg: #0f1419; --surface: #171f28; --surface-2: #1c2530; --line: #2a3541; --line-soft: #212b36;
-  --fg: #e7ecf1; --muted: #93a0ae; --accent: #6aa9ec; --accent-fg: #08121d; --accent-soft: rgba(106,169,236,.18);
-  --field: #0f1419; --danger: #ff8f86; --neutral-bg: #212b36; --neutral-fg: #8190a0;
-  --k-entrada: #3fb96a; --k-saida: #f0716b; --k-gasto: #f5a623; --k-cartao: #a78bfa; --k-reserva: #6aa9ec;
-  color-scheme: dark;
-}
+:root { --bg: #eef7ea; --surface: #ffffff; --surface-2: #f4faf0; --line: #d0e2c9; --line-soft: #e2eedb; --fg: #1a2a1a; --muted: #5a6b58; --accent: #f0d75c; --accent-fg: #2b2400; --accent-soft: rgba(240,215,92,.38); --field: #ffffff; --danger: #b42318; --neutral-bg: #dfeeda; --neutral-fg: #6b7d68; --s1-bg: #15803d; --s1-fg: #ffffff; --s2-bg: #b7e4c2; --s2-fg: #0d3b1b; --s3-bg: #fbe38a; --s3-fg: #3f3000; --s4-bg: #f2a39d; --s4-fg: #55110d; --s5-bg: #8a1a1a; --s5-fg: #ffffff; --k-entrada: #15803d; --k-saida: #c93a3a; --k-gasto: #d97706; --k-cartao: #7c3aed; --k-reserva: #2563eb; --radius: 12px; --radius-sm: 10px; --font-body: "IBM Plex Sans", Roboto, system-ui, sans-serif; --font-head: "Space Grotesk", "IBM Plex Sans", sans-serif; --font-num: "IBM Plex Mono", ui-monospace, monospace; --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275); --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #0f1419; --surface: #171f28; --surface-2: #1c2530; --line: #2a3541; --line-soft: #212b36; --fg: #e7ecf1; --muted: #93a0ae; --accent: #6aa9ec; --accent-fg: #08121d; --accent-soft: rgba(106,169,236,.18); --field: #0f1419; --danger: #ff8f86; --neutral-bg: #212b36; --neutral-fg: #8190a0; --k-entrada: #3fb96a; --k-saida: #f0716b; --k-gasto: #f5a623; --k-cartao: #a78bfa; --k-reserva: #6aa9ec; color-scheme: dark; } }
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 html, body { margin: 0; padding: 0; overscroll-behavior-y: contain; background: var(--bg); color: var(--fg); font: 15px/1.5 var(--font-body); -webkit-font-smoothing: antialiased; }
 body { padding-bottom: calc(160px + env(safe-area-inset-bottom, 0px)); padding-left: max(12px, env(safe-area-inset-left, 0px)); padding-right: max(12px, env(safe-area-inset-right, 0px)); min-height: 100dvh; }
 h1, h2, h3, p { margin: 0; }
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
 .num { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
 .muted { color: var(--muted); }
-
-.app-bar { position: sticky; top: 0; z-index: 50; background: var(--surface); border-bottom: 1px solid transparent; transition: box-shadow 0.3s var(--ease-smooth); margin-inline: calc(-1 * max(12px, env(safe-area-inset-left, 0px))); padding-inline: max(12px, env(safe-area-inset-left, 0px)); }
-body.scrolled .app-bar { border-bottom-color: var(--line); box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
-.app-bar-inner { max-width: 1120px; margin: 0 auto; display: flex; align-items: center; gap: 12px; padding-top: calc(10px + env(safe-area-inset-top, 0px)); padding-bottom: 10px; min-height: 60px; }
-.app-bar-logo { width: 34px; height: 34px; flex: none; border-radius: 9px; background: var(--accent); color: var(--accent-fg); display: inline-flex; align-items: center; justify-content: center; }
-.app-bar-inner h1 { font: 600 20px/1.2 var(--font-head); letter-spacing: -.015em; flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px; }
-.sync { font: 500 11px var(--font-body); color: var(--muted); display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--line-soft); flex: none; max-width: 40vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.sync::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--muted); flex: none; transition: background .2s ease; }
-.sync[data-mode="cloud"]::before { background: var(--bar-in); }
-.sync[data-mode="saving"]::before { background: var(--k-gasto); animation: sync-pulse 1.2s ease-in-out infinite; }
-.sync[data-mode="localerr"]::before { background: var(--bar-out); }
-@keyframes sync-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
-.icon-btn { width: 40px; height: 40px; border: 0; border-radius: 50%; background: transparent; color: var(--fg); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: background 0.2s ease, transform 0.1s ease; }
-.icon-btn:hover { background: var(--surface-2); }
-.icon-btn:active { transform: scale(0.92); }
-.icon-btn svg { width: 24px; height: 24px; fill: currentColor; }
-#btn-settings.active { background: var(--accent-soft); color: var(--accent-fg); }
-.top-tabs { display: none; max-width: 1120px; margin: 0 auto; gap: 4px; border-bottom: 1px solid var(--line); padding-bottom: 4px; }
-@media (min-width: 768px) { .top-tabs { display: flex; } .app-bar { padding-bottom: 0; } }
-.top-tab { font: 500 14px var(--font-body); padding: 10px 16px; border: 0; background: transparent; color: var(--muted); cursor: pointer; border-radius: 8px 8px 0 0; position: relative; transition: color 0.2s, background 0.2s; }
-.top-tab:hover { color: var(--fg); background: var(--surface-2); }
-.top-tab[aria-current="page"] { color: var(--fg); font-weight: 600; }
-.top-tab[aria-current="page"]::after { content: ''; position: absolute; bottom: -5px; left: 16px; right: 16px; height: 3px; background: var(--accent); border-radius: 3px 3px 0 0; animation: tabSlideIn 0.3s var(--ease-smooth); }
-
-#login-screen { position: fixed; inset: 0; z-index: 1000; background: var(--bg); display: flex; align-items: center; justify-content: center; padding: 20px; animation: paneFadeIn 0.4s var(--ease-smooth); }
+#login-screen { position: fixed; inset: 0; z-index: 1000; background: var(--bg); display: flex; align-items: center; justify-content: center; padding: 20px; }
 .login-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; width: 100%; max-width: 380px; display: flex; flex-direction: column; gap: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
 .login-card h2 { text-align: center; font: 600 22px var(--font-head); }
 .login-card p { text-align: center; font-size: 13px; color: var(--muted); margin-bottom: 8px; }
-.login-card input { margin-top: 4px; }
 .login-card .btn { margin-top: 8px; }
 .login-msg { color: var(--danger); font-size: 13px; text-align: center; min-height: 18px; font-weight: 500; }
 .toggle-auth { text-align: center; font-size: 13px; color: var(--accent); cursor: pointer; font-weight: 600; margin-top: 8px; }
-.toggle-auth:hover { text-decoration: underline; }
-
 .app { max-width: 1120px; margin-inline: auto; display: grid; gap: 16px; padding-top: 16px; }
-.pane { display: grid; gap: 16px; min-width: 0; animation: paneFadeIn 0.4s var(--ease-smooth) forwards; }
-@keyframes paneFadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-
-.btn { font: 500 14px var(--font-body); min-height: 44px; padding: 0 16px; border: 1px solid var(--line); background: var(--surface); color: var(--fg); border-radius: var(--radius-sm); cursor: pointer; position: relative; overflow: hidden; transition: background 0.2s, border-color 0.2s, transform 0.1s var(--ease-spring); }
-.btn:hover { border-color: var(--accent); background: var(--accent-soft); }
-.btn:active { transform: scale(0.96); }
+.pane { display: grid; gap: 16px; min-width: 0; }
+.btn { font: 500 14px var(--font-body); min-height: 44px; padding: 0 16px; border: 1px solid var(--line); background: var(--surface); color: var(--fg); border-radius: var(--radius-sm); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
 .btn.primary { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); font-weight: 600; }
-.btn.primary:hover { filter: brightness(0.98); background: var(--accent); }
-.btn.icon { width: 44px; padding: 0; display: inline-flex; align-items: center; justify-content: center; }
-
-.fld { min-height: 44px; border: 1px solid var(--line); background: var(--field); color: var(--fg); border-radius: var(--radius-sm); padding: 0 12px; font: 16px var(--font-body); min-width: 0; width: 100%; transition: border-color 0.2s, box-shadow 0.2s; }
-.fld:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
-.fld.money { text-align: right; font-family: var(--font-num); }
-select.fld { appearance: none; padding-right: 28px; background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='%235a6b58'><path d='M7 10l5 5 5-5z'/></svg>") no-repeat right 10px center; }
-
-.month-bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.month-bar h2 { font: 600 20px var(--font-head); min-width: 150px; text-align: center; }
-.month-bar .spacer { flex: 1 1 0; }
-.summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; margin: 0; }
-.summary > div { background: var(--surface); padding: 12px 14px; min-width: 0; }
-.summary dt { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; font-weight: 600; }
-.summary dd { margin: 4px 0 0; font: 600 17px var(--font-num); display: flex; align-items: center; gap: 6px; }
-.layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; align-items: start; }
-@media (min-width: 900px) { .layout { grid-template-columns: minmax(0, 420px) minmax(0, 1fr); } }
-.weekdays, .grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 5px; }
-.weekdays span { text-align: center; font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; }
-.cell { position: relative; min-height: 62px; border: 0; border-radius: 10px; padding: 6px 4px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; font-family: var(--font-body); cursor: pointer; transition: transform 0.15s var(--ease-spring), filter 0.2s; animation: cellFadeUp 0.4s var(--ease-smooth) both; }
-@keyframes cellFadeUp { from { opacity: 0; transform: translateY(6px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
-.cell:hover { filter: brightness(1.05); transform: translateY(-2px); }
-.cell:active { transform: scale(0.94); }
-.cell.sel { outline: 3px solid var(--accent); outline-offset: 2px; z-index: 1; box-shadow: 0 4px 12px -4px rgba(0,0,0,0.2); }
-.cell.today .dn::after { content: ''; width: 4px; height: 4px; border-radius: 50%; background: currentColor; display: inline-block; margin-left: 4px; }
-
-.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; display: grid; gap: 16px; transition: box-shadow 0.3s; }
-.card:hover { box-shadow: 0 6px 20px -8px rgba(0,0,0,0.08); }
-.tbl { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
-.tables { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
-table { width: 100%; border-collapse: collapse; }
-table.rows td { padding: 8px 0; border-bottom: 1px solid var(--line-soft); vertical-align: middle; }
-table.rows tr:last-child td { border-bottom: 0; }
-table.rows td.d { padding-right: 8px; }
-table.rows td.v { text-align: right; font: 500 14px var(--font-num); }
-.x-btn { width: 40px; height: 40px; border: 0; background: transparent; color: var(--muted); border-radius: 50%; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: color 0.2s, background 0.2s, transform 0.1s; }
-.x-btn:hover { color: var(--danger); background: var(--accent-soft); transform: rotate(90deg); }
-
-.settings-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
-@media (min-width: 820px) { .settings-grid { grid-template-columns: repeat(2, 1fr); } .settings-grid .span-all { grid-column: 1 / -1; } }
-.seg-control { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; background: var(--surface); position: relative; }
-.seg { position: relative; cursor: pointer; display: inline-flex; padding: 0; }
-.seg input { position: absolute; opacity: 0; }
-.seg > span { display: flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 20px; transition: background 0.3s var(--ease-smooth), color 0.3s; }
-.seg input:checked + span { background: var(--accent); color: var(--accent-fg); font-weight: 600; }
-
-.fab { position: fixed; right: 16px; bottom: calc(68px + 24px + env(safe-area-inset-bottom, 0px)); display: inline-flex; align-items: center; gap: 8px; height: 56px; padding: 0 20px 0 16px; border: 0; border-radius: 18px; background: var(--accent); color: var(--accent-fg); font: 600 14px var(--font-body); box-shadow: 0 4px 14px rgba(0,0,0,0.15); transition: transform 0.2s var(--ease-spring), box-shadow 0.2s; z-index: 90; }
-.fab:active { transform: scale(0.92); box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
-@media (min-width: 768px) { .fab { display: none; } }
-.bottom-nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 100; background: var(--surface); border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom, 0px); box-shadow: 0 -2px 10px rgba(0,0,0,0.03); }
-@media (min-width: 768px) { .bottom-nav { display: none; } }
-.bottom-nav-inner { display: grid; grid-template-columns: repeat(4, 1fr); max-width: 560px; margin: 0 auto; padding: 6px 0; }
-.nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 2px; border: 0; background: none; color: var(--muted); font: 500 10.5px var(--font-body); cursor: pointer; transition: color 0.2s; }
-.nav-indicator { display: grid; place-items: center; width: 56px; height: 30px; border-radius: 15px; transition: background 0.3s var(--ease-spring), color 0.3s; }
-.nav-item[aria-current="page"] { color: var(--fg); font-weight: 600; }
-.nav-item[aria-current="page"] .nav-indicator { background: var(--accent); color: var(--accent-fg); transform: scale(1.05); }
-
-.ripple { position: absolute; border-radius: 50%; background: currentColor; opacity: .3; pointer-events: none; transform: scale(0); animation: ripple-expand .6s var(--ease-smooth) forwards; z-index: 1; }
-@keyframes ripple-expand { to { transform: scale(1); opacity: 0; } }
-@keyframes tabSlideIn { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.fld { min-height: 44px; border: 1px solid var(--line); background: var(--field); color: var(--fg); border-radius: var(--radius-sm); padding: 0 12px; font: 16px var(--font-body); width: 100%; }
+.fld:focus { outline: none; border-color: var(--accent); }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; }
 </style>
 </head>
 <body>
@@ -178,97 +51,17 @@ table.rows td.v { text-align: right; font: 500 14px var(--font-num); }
 </div>
 
 <div id="app-screen" hidden>
-  <header class="app-bar">
-    <div class="app-bar-inner">
-      <span class="app-bar-logo"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 19V11M12 19V5M19 19v-5"/></svg></span>
-      <h1>Finanças</h1>
-      <span class="sync" id="sync" aria-live="polite">Salvo local</span>
-      <button class="icon-btn" id="btn-settings" aria-label="Configurações">
-        <svg id="settings-icon" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
-      </button>
-    </div>
-    <div class="top-tabs">
-      <button class="top-tab" id="tab-cal" aria-current="page" onclick="changeTab('cal')">Calendário</button>
-      <button class="top-tab" id="tab-budget" aria-current="false" onclick="changeTab('budget')">Gasto Diário</button>
-      <button class="top-tab" id="tab-cost" aria-current="false" onclick="changeTab('cost')">Custo de Vida</button>
-      <button class="top-tab" id="tab-tags" aria-current="false" onclick="changeTab('tags')">Gastos por Tag</button>
-    </div>
+  <header class="app-bar" style="padding:16px;background:var(--surface);display:flex;justify-content:space-between;align-items:center">
+    <h1>Finanças</h1>
+    <button class="btn" id="btn-logout">Sair</button>
   </header>
-
   <main class="app">
-    <div class="pane" id="viewCal">
-      <div class="month-bar">
-        <button class="btn icon" id="prev">‹</button>
-        <h2 id="monthTitle"></h2>
-        <button class="btn icon" id="next">›</button>
-        <span class="spacer"></span>
-      </div>
-      <dl class="summary" id="summary"></dl>
-      <div class="layout">
-        <section>
-          <div class="weekdays"><span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span></div>
-          <div class="grid" id="grid"></div>
-        </section>
-        <section class="day" id="dayPanel"></section>
-      </div>
-    </div>
-
-    <div class="pane" id="viewBudget" hidden>
-      <section class="card">
-        <h2>Meus gastos do mês</h2>
-        <div id="catList"></div>
-        <form id="budgetForm" style="display:flex;gap:8px;flex-wrap:wrap">
-          <input class="fld" id="cat-name" placeholder="Comida" style="flex:1">
-          <input class="fld money" id="cat-val" placeholder="500,00" style="flex:1">
-          <button class="btn primary" type="submit">Adicionar</button>
-        </form>
-        <div id="budgetOut"></div>
-      </section>
-    </div>
-
-    <div class="pane" id="viewCost" hidden><div class="card"><h2>Custo de Vida</h2><div id="costContent"></div></div></div>
-    <div class="pane" id="viewTags" hidden><div class="card"><h2>Gastos por Tag</h2><div id="tagsContent"></div></div></div>
-
-    <div class="pane" id="viewSettings" hidden>
-      <div class="settings-grid">
-        <section class="card span-all" style="border-color:var(--accent)">
-          <h2>Conta e Sincronização</h2>
-          <p class="muted">Logado como: <strong id="user-email" style="color:var(--fg)"></strong></p>
-          <div style="display:flex;gap:8px;margin-top:8px">
-            <button class="btn" id="btn-logout" style="color:var(--danger);border-color:var(--danger)">Sair da conta</button>
-          </div>
-        </section>
-        <section class="card">
-          <h2>Aparência</h2>
-          <div class="seg-control">
-            <label class="seg"><input type="radio" name="theme" value="auto"><span>Automático</span></label>
-            <label class="seg"><input type="radio" name="theme" value="light"><span>Claro</span></label>
-            <label class="seg"><input type="radio" name="theme" value="dark"><span>Escuro</span></label>
-          </div>
-        </section>
-        <section class="card span-all">
-          <h2>Saldo Inicial e Faixas</h2>
-          <div class="set-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-            <label>Saldo Inicial<input class="fld money" id="opening"></label>
-            <label>Verde Forte ≥<input class="fld money" id="lim-g"></label>
-            <label>Verde Claro ≥<input class="fld money" id="lim-l"></label>
-            <label>Amarelo ≥<input class="fld money" id="lim-y"></label>
-            <label>Verm. Claro ≥<input class="fld money" id="lim-r"></label>
-          </div>
-        </section>
-      </div>
+    <div class="card">
+      <h2>Logado com Sucesso!</h2>
+      <p class="muted" id="user-email"></p>
+      <p style="margin-top:16px;font-size:24px;font-weight:bold" id="sync">Sincronizado</p>
     </div>
   </main>
-
-  <button class="fab" id="fab" aria-label="Ir para hoje" style="display:none">Hoje</button>
-  <nav class="bottom-nav">
-    <div class="bottom-nav-inner">
-      <button class="nav-item" id="nav-cal" aria-current="page" onclick="changeTab('cal')"><span class="nav-indicator"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V9h14v10z"/></svg></span><span class="nav-label">Calendário</span></button>
-      <button class="nav-item" id="nav-budget" onclick="changeTab('budget')"><span class="nav-indicator"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M21 7.28V5c0-1.1-.9-2-2-2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-2.28c.6-.35 1-.98 1-1.72V9c0-.74-.4-1.37-1-1.72zM20 9v6h-7V9h7zM5 19V5h14v2h-6c-1.1 0-2 .9-2 2v6c0 1.1.9 2 2 2h6v2H5z"/></svg></span><span class="nav-label">Diário</span></button>
-      <button class="nav-item" id="nav-cost" onclick="changeTab('cost')"><span class="nav-indicator"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg></span><span class="nav-label">Custo</span></button>
-      <button class="nav-item" id="nav-tags" onclick="changeTab('tags')"><span class="nav-indicator"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M17.63 5.84C17.27 5.33 16.67 5 16 5L5 5.01C3.9 5.01 3 5.9 3 7v10c0 1.1.9 1.99 2 1.99L16 19c.67 0 1.27-.33 1.63-.84L22 12l-4.37-6.16zM16 17H5V7h11l3.55 5L16 17z"/></svg></span><span class="nav-label">Tags</span></button>
-    </div>
-  </nav>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -290,43 +83,30 @@ try {
   firebase.initializeApp(firebaseConfig);
   auth = firebase.auth();
   db = firebase.firestore();
+  console.log("Firebase inicializado.");
 } catch (e) {
-  console.error("Erro no Firebase.", e);
-  document.getElementById('login-msg').textContent = "Erro de conexão. Verifique sua internet.";
+  console.error("Erro ao iniciar Firebase:", e);
 }
 
-const KINDS = [{k:'entrada',t:'Entrada',sym:'+'},{k:'saida',t:'Saída',sym:'−'},{k:'gasto',t:'Gasto diário',sym:'−'},{k:'cartao',t:'Cartão',sym:'−'},{k:'reserva',t:'Reserva',sym:'−'}];
-const MONTHS = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-const LS_KEY = 'financas-beta1';
-
 const $ = id => document.getElementById(id);
-const pad = n => String(n).padStart(2,'0');
-const round2 = n => Math.round(n*100)/100;
-const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
-const key = (y,m,d) => y+'-'+pad(m+1)+'-'+pad(d);
-const daysIn = (y,m) => new Date(y,m+1,0).getDate();
-const parseKey = k => { const p = k.split('-').map(Number); return {y:p[0],m:p[1]-1,d:p[2]}; };
-const todayKey = () => { const t = new Date(); return key(t.getFullYear(),t.getMonth(),t.getDate()); };
-const BRL = new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'});
-const parseMoney = raw => { let s = String(raw).trim().replace(/\s|R\$/g,''); if(!s)return NaN; let neg = false; if(s[0]==='-'||s[0]==='−'){neg=true;s=s.slice(1);} if(s.indexOf(',')>=0)s=s.replace(/\./g,'').replace(',','.'); if(!/^\d+(\.\d+)?$/.test(s))return NaN; const v = parseFloat(s); return neg?-v:v; };
-
-let state = JSON.parse(localStorage.getItem(LS_KEY) || 'null') || {opening:0, limits:{g:2000,l:1000,y:300,r:0}, days:{}, rules:[], installments:[], budget:{cats:[]}, tags:[], settings:{theme:'auto', notif:{enabled:false, time:'20:00'}}};
-let sel = todayKey();
-let view = {y: parseKey(sel).y, m: parseKey(sel).m};
-let ui = {tab: 'cal', lastTab: 'cal', isRegistering: false};
+let isRegistering = false;
 
 $('toggle-auth').onclick = () => {
-  ui.isRegistering = !ui.isRegistering;
-  $('auth-title').textContent = ui.isRegistering ? 'Criar Conta' : 'Entrar';
-  $('btn-auth-submit').textContent = ui.isRegistering ? 'Cadastrar' : 'Entrar';
-  $('toggle-auth').textContent = ui.isRegistering ? 'Já tem conta? Fazer login' : 'Não tem conta? Criar agora';
+  isRegistering = !isRegistering;
+  $('auth-title').textContent = isRegistering ? 'Criar Conta' : 'Entrar';
+  $('btn-auth-submit').textContent = isRegistering ? 'Cadastrar' : 'Entrar';
+  $('toggle-auth').textContent = isRegistering ? 'Já tem conta? Fazer login' : 'Não tem conta? Criar agora';
   $('login-msg').textContent = '';
 };
 
 $('btn-auth-submit').onclick = async () => {
-  if(!auth) return;
+  console.log("=> Botão clicado.");
+  if(!auth) return console.error("Auth não inicializado!");
+  
   const username = $('login-user').value.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
   const pass = $('login-pass').value;
+  console.log("=> Tentando:", username, "Modo:", isRegistering ? "Cadastro" : "Login");
+
   if(username.length < 3) return $('login-msg').textContent = 'O apelido precisa ter 3 letras ou mais.';
   if(pass.length < 6) return $('login-msg').textContent = 'A senha precisa ter 6 caracteres ou mais.';
 
@@ -335,12 +115,20 @@ $('btn-auth-submit').onclick = async () => {
   $('btn-auth-submit').disabled = true;
 
   try {
+    console.log("=> Configurando persistencia...");
     await auth.setPersistence($('login-remember').checked ? firebase.auth.Auth.Persistence.LOCAL : firebase.auth.Auth.Persistence.SESSION);
-    if (ui.isRegistering) await auth.createUserWithEmailAndPassword(fakeEmail, pass);
-    else await auth.signInWithEmailAndPassword(fakeEmail, pass);
+    
+    console.log("=> Chamando Firebase...");
+    if (isRegistering) {
+      await auth.createUserWithEmailAndPassword(fakeEmail, pass);
+    } else {
+      await auth.signInWithEmailAndPassword(fakeEmail, pass);
+    }
+    console.log("=> SUCESSO NO LOGIN!");
   } catch(e) {
+    console.error("=> ERRO NO FIREBASE:", e.code, e.message);
     if(e.code === 'auth/wrong-password') $('login-msg').textContent = 'Senha incorreta.';
-    else if(e.code === 'auth/user-not-found') $('login-msg').textContent = 'Esse apelido não existe. Crie uma conta.';
+    else if(e.code === 'auth/user-not-found') $('login-msg').textContent = 'Esse apelido não existe.';
     else if(e.code === 'auth/email-already-in-use') $('login-msg').textContent = 'Esse apelido já está em uso.';
     else $('login-msg').textContent = 'Erro: ' + e.message;
   } finally {
@@ -352,204 +140,27 @@ $('btn-logout').onclick = () => auth.signOut();
 
 if(auth) {
   auth.onAuthStateChanged(user => {
+    console.log("=> Mudança de estado de Auth. User:", user ? user.email : "Nenhum");
     if (user) {
       $('user-email').textContent = user.email.replace('@financas.app', '');
       $('login-screen').hidden = true;
       $('app-screen').hidden = false;
       
-      // Lendo os dados em tempo real do Firestore com proteção contra erros de permissão
       try {
         db.collection('users').doc(user.uid).onSnapshot(doc => {
-          if(doc.exists) {
-            const remote = doc.data();
-            if(JSON.stringify(remote) !== JSON.stringify(state)) {
-              state = remote;
-              localStorage.setItem(LS_KEY, JSON.stringify(state));
-              renderAll();
-            }
-          } else {
-            db.collection('users').doc(user.uid).set(state);
-          }
+          console.log("=> Firestore conectado com sucesso.");
         }, error => {
-          console.error("Erro de permissão no Firestore:", error);
-          alert("O login funcionou, mas o banco de dados bloqueou o acesso. Verifique as Regras do Firestore!");
+          console.error("=> ERRO NO FIRESTORE (Regras?):", error);
         });
       } catch(e) {
-        console.error("Erro geral Firestore:", e);
+        console.error("=> Erro geral Firestore:", e);
       }
-      
-      $('sync').textContent = 'Sincronizado';
-      $('sync').dataset.mode = 'cloud';
-      renderAll();
-      changeTab('cal');
     } else {
       $('login-screen').hidden = false;
       $('app-screen').hidden = true;
-      $('sync').textContent = 'Offline';
     }
   });
 }
-
-let saveTimer;
-function touch() {
-  localStorage.setItem(LS_KEY, JSON.stringify(state));
-  if (auth && auth.currentUser) {
-    $('sync').textContent = 'Salvando...';
-    $('sync').dataset.mode = 'saving';
-    clearTimeout(saveTimer);
-    saveTimer = setTimeout(async () => {
-      try {
-        await db.collection('users').doc(auth.currentUser.uid).set(state);
-        $('sync').textContent = 'Sincronizado';
-        $('sync').dataset.mode = 'cloud';
-      } catch(e) {
-        $('sync').textContent = 'Erro ao salvar';
-        $('sync').dataset.mode = 'localerr';
-      }
-    }, 1000);
-  }
-}
-
-function renderAll() {
-  const t = state.settings?.theme || 'auto';
-  if(t==='auto') document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme',t);
-  $('opening').value = state.opening ? String(state.opening).replace('.',',') : '';
-  $('lim-g').value = state.limits?.g ? String(state.limits.g).replace('.',',') : '';
-  $('lim-l').value = state.limits?.l ? String(state.limits.l).replace('.',',') : '';
-  $('lim-y').value = state.limits?.y ? String(state.limits.y).replace('.',',') : '';
-  $('lim-r').value = state.limits?.r ? String(state.limits.r).replace('.',',') : '';
-  document.querySelectorAll('input[name="theme"]').forEach(r => r.checked = (r.value === t));
-  renderMonth(); renderDay(); renderBudget(); renderTags(); renderCost();
-}
-
-function calcDay(k) {
-  let net = 0;
-  const items = state.days[k] || {};
-  KINDS.forEach(kd => {
-    const sum = (items[kd.k]||[]).reduce((s,i)=>s+i.valor,0);
-    if(kd.k === 'entrada') net += sum; else net -= sum;
-  });
-  return net;
-}
-
-function renderMonth() {
-  $('monthTitle').textContent = MONTHS[view.m]+' '+view.y;
-  const first = new Date(view.y,view.m,1).getDay(), dim = daysIn(view.y,view.m);
-  let bal = state.opening || 0, h='';
-  for(let i=0; i<first; i++) h+='<span></span>';
-  for(let d=1; d<=dim; d++) {
-    const k = key(view.y,view.m,d);
-    bal = round2(bal + calcDay(k));
-    const st = bal >= (state.limits?.g||2000) ? 1 : bal >= (state.limits?.l||1000) ? 2 : bal >= (state.limits?.y||300) ? 3 : bal >= (state.limits?.r||0) ? 4 : 5;
-    h+='<button class="cell s'+st+' '+(k===sel?'sel':'')+'" data-date="'+k+'" style="animation-delay:'+(d*8)+'ms"><span class="dn">'+d+'</span><span class="sv num">'+(bal/1000).toFixed(1)+'k</span></button>';
-  }
-  $('grid').innerHTML = h;
-  $('summary').innerHTML = '<div><dt>Saldo Final</dt><dd>'+BRL.format(bal)+'</dd></div>';
-}
-
-function renderDay() {
-  let h = '<div class="day-head"><h2>'+sel+'</h2></div><div class="tables">';
-  KINDS.forEach(kd => {
-    const items = (state.days[sel]?.[kd.k] || []);
-    let rows = items.map(it => '<tr><td>'+it.desc+'</td><td class="v">'+BRL.format(it.valor)+'</td><td><button class="x-btn" onclick="delItem(\''+kd.k+'\',\''+it.id+'\')">×</button></td></tr>').join('');
-    h += '<div class="tbl"><div class="tbl-h"><h3>'+kd.t+'</h3></div><table class="rows">'+rows+'</table>'
-      +'<form onsubmit="addItem(event,\''+kd.k+'\')" style="display:flex;gap:4px"><input class="fld" name="desc" placeholder="Desc" style="flex:1"><input class="fld money" name="val" placeholder="0,00" style="width:70px"><button class="btn primary">+</button></form></div>';
-  });
-  h += '</div>';
-  $('dayPanel').innerHTML = h;
-}
-
-function renderBudget() {
-  const cats = state.budget?.cats || [];
-  let h = cats.map((c, i) => '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line-soft)"><span>'+c.name+'</span><span>'+BRL.format(c.valor)+' <button class="x-btn" onclick="delCat('+i+')">×</button></span></div>').join('');
-  if(!cats.length) h = '<p class="muted">Nenhum gasto cadastrado.</p>';
-  $('catList').innerHTML = h;
-  $('budgetOut').innerHTML = '<p class="muted">Total: '+BRL.format(cats.reduce((a,c)=>a+c.valor,0))+'/mês</p>';
-}
-
-function renderTags() {
-  let map = {};
-  Object.keys(state.days || {}).forEach(k => {
-    KINDS.forEach(kd => {
-      if(kd.k === 'saida' || kd.k === 'gasto' || kd.k === 'cartao') {
-        (state.days[k][kd.k]||[]).forEach(it => { map[it.tag||'Sem tag'] = (map[it.tag||'Sem tag']||0) + it.valor; });
-      }
-    });
-  });
-  const names = Object.keys(map).sort((a,b)=>map[b]-map[a]);
-  let h = names.map(n => '<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between"><span>'+n+'</span><strong>'+BRL.format(map[n])+'</strong></div><div style="height:8px;background:var(--line);border-radius:4px;margin-top:4px"><div style="height:100%;width:'+(map[n]/Math.max(...Object.values(map))*100)+'%;background:var(--danger);border-radius:4px"></div></div></div>').join('');
-  $('tagsContent').innerHTML = h || '<p class="muted">Sem dados.</p>';
-}
-
-function renderCost() {
-  $('costContent').innerHTML = '<p class="muted">Gráficos de custo de vida em breve.</p>';
-}
-
-window.addItem = (e, kind) => {
-  e.preventDefault();
-  const form = e.target;
-  const desc = form.desc.value;
-  const val = parseMoney(form.val.value);
-  if(isNaN(val) || val === 0) return;
-  if(!state.days[sel]) state.days[sel] = {entrada:[],saida:[],gasto:[],cartao:[],reserva:[]};
-  state.days[sel][kind].push({id:uid(), desc:desc, valor:val});
-  form.reset();
-  touch(); renderAll();
-};
-
-window.delItem = (kind, id) => {
-  if(state.days[sel]?.[kind]) {
-    state.days[sel][kind] = state.days[sel][kind].filter(it => it.id !== id);
-    touch(); renderAll();
-  }
-};
-
-window.delCat = (i) => {
-  state.budget.cats.splice(i, 1);
-  touch(); renderAll();
-};
-
-window.changeTab = function(name) {
-  ui.tab = name;
-  ['cal','budget','cost','tags','settings'].forEach(n => $('view'+n.charAt(0).toUpperCase()+n.slice(1)).hidden = (n !== name));
-  document.querySelectorAll('.top-tab').forEach(el => el.setAttribute('aria-current', el.id === 'tab-'+name ? 'page' : 'false'));
-  document.querySelectorAll('.nav-item').forEach(el => el.setAttribute('aria-current', el.id === 'nav-'+name ? 'page' : 'false'));
-  $('fab').style.display = (name === 'cal') ? 'inline-flex' : 'none';
-  window.scrollTo({top:0, behavior:'smooth'});
-};
-$('btn-settings').onclick = () => changeTab('settings');
-
-$('grid').onclick = e => { const c = e.target.closest('.cell'); if(!c) return; sel = c.dataset.date; renderAll(); };
-$('prev').onclick = () => { view.m--; if(view.m<0){view.m=11;view.y--;} renderMonth(); };
-$('next').onclick = () => { view.m++; if(view.m>11){view.m=0;view.y++;} renderMonth(); };
-$('fab').onclick = () => { sel = todayKey(); const p = parseKey(sel); view = {y:p.y, m:p.m}; renderAll(); };
-
-$('budgetForm').onsubmit = e => {
-  e.preventDefault();
-  const name = $('cat-name').value, val = parseMoney($('cat-val').value);
-  if(!name || isNaN(val)) return;
-  if(!state.budget) state.budget = {cats:[]};
-  state.budget.cats.push({id:uid(), name, valor:val});
-  $('cat-name').value = ''; $('cat-val').value = '';
-  touch(); renderAll();
-};
-
-$('opening').onchange = () => { state.opening = parseMoney($('opening').value)||0; touch(); renderAll(); };
-['lim-g','lim-l','lim-y','lim-r'].forEach(id => {
-  $(id).onchange = () => {
-    state.limits = state.limits || {};
-    state.limits[id.replace('lim-','')] = parseMoney($(id).value)||0;
-    touch(); renderAll();
-  };
-});
-
-document.querySelectorAll('input[name="theme"]').forEach(r => {
-  r.onchange = () => { state.settings.theme = r.value; touch(); renderAll(); };
-});
-
-window.addEventListener('scroll', () => { document.body.classList.toggle('scrolled', window.scrollY > 5); }, {passive: true});
-
-renderAll();
 </script>
 </body>
 </html>
