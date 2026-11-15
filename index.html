@@ -15,6 +15,9 @@
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap">
 <style>
+/* ESSA LINHA GARANTE QUE A TELA DE LOGIN VÁ EMBORA */
+[hidden] { display: none !important; }
+
 :root {
   --bg: #eef7ea; --surface: #ffffff; --surface-2: #f4faf0;
   --line: #d0e2c9; --line-soft: #e2eedb;
@@ -63,9 +66,9 @@ body.scrolled .app-bar { border-bottom-color: var(--line); box-shadow: 0 4px 12p
 .app-bar-inner h1 { font: 600 20px/1.2 var(--font-head); letter-spacing: -.015em; flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px; }
 .sync { font: 500 11px var(--font-body); color: var(--muted); display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--line-soft); flex: none; max-width: 40vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .sync::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--muted); flex: none; transition: background .2s ease; }
-.sync[data-mode="cloud"]::before { background: var(--bar-in); }
-.sync[data-mode="saving"]::before { background: var(--k-gasto); animation: sync-pulse 1.2s ease-in-out infinite; }
-.sync[data-mode="localerr"]::before { background: var(--bar-out); }
+.sync[data-mode="cloud"]::before { background: var(--bar-in, #15803d); }
+.sync[data-mode="saving"]::before { background: var(--k-gasto, #d97706); animation: sync-pulse 1.2s ease-in-out infinite; }
+.sync[data-mode="localerr"]::before { background: var(--bar-out, #c93a3a); }
 @keyframes sync-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
 .icon-btn { width: 40px; height: 40px; border: 0; border-radius: 50%; background: transparent; color: var(--fg); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: background 0.2s ease, transform 0.1s ease; }
 .icon-btn:hover { background: var(--surface-2); }
@@ -352,14 +355,12 @@ $('btn-logout').onclick = () => auth.signOut();
 if(auth) {
   auth.onAuthStateChanged(user => {
     if (user) {
-      // 1. PRIMEIRO: Muda a tela para o app!
       $('login-screen').hidden = true;
       $('app-screen').hidden = false;
       $('user-email').textContent = user.email.replace('@financas.app', '');
       renderAll();
       changeTab('cal');
 
-      // 2. DEPOIS: Puxa os dados do banco em segundo plano
       $('sync').textContent = 'Sincronizando...';
       $('sync').dataset.mode = 'saving';
       
