@@ -15,7 +15,6 @@
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap">
 <style>
-/* ... (O CSS continua exatamente igual ao anterior, apenas omiti aqui para não alongar) ... */
 :root {
   --bg: #eef7ea; --surface: #ffffff; --surface-2: #f4faf0;
   --line: #d0e2c9; --line-soft: #e2eedb;
@@ -162,7 +161,6 @@ table.rows td.v { text-align: right; font: 500 14px var(--font-num); }
 </head>
 <body>
 
-<!-- AQUI ESTÁ A GRANDE MUDANÇA: A tela de login agora começa VISÍVEL por padrão! -->
 <div id="login-screen">
   <div class="login-card">
     <h2 id="auth-title">Entrar no Finanças</h2>
@@ -342,7 +340,7 @@ $('btn-auth-submit').onclick = async () => {
     else await auth.signInWithEmailAndPassword(fakeEmail, pass);
   } catch(e) {
     if(e.code === 'auth/wrong-password') $('login-msg').textContent = 'Senha incorreta.';
-    else if(e.code === 'auth/user-not-found') $('login-msg').textContent = 'Esse apelido não existe.';
+    else if(e.code === 'auth/user-not-found') $('login-msg').textContent = 'Esse apelido não existe. Crie uma conta.';
     else if(e.code === 'auth/email-already-in-use') $('login-msg').textContent = 'Esse apelido já está em uso.';
     else $('login-msg').textContent = 'Erro: ' + e.message;
   } finally {
@@ -359,18 +357,26 @@ if(auth) {
       $('login-screen').hidden = true;
       $('app-screen').hidden = false;
       
-      db.collection('users').doc(user.uid).onSnapshot(doc => {
-        if(doc.exists) {
-          const remote = doc.data();
-          if(JSON.stringify(remote) !== JSON.stringify(state)) {
-            state = remote;
-            localStorage.setItem(LS_KEY, JSON.stringify(state));
-            renderAll();
+      // Lendo os dados em tempo real do Firestore com proteção contra erros de permissão
+      try {
+        db.collection('users').doc(user.uid).onSnapshot(doc => {
+          if(doc.exists) {
+            const remote = doc.data();
+            if(JSON.stringify(remote) !== JSON.stringify(state)) {
+              state = remote;
+              localStorage.setItem(LS_KEY, JSON.stringify(state));
+              renderAll();
+            }
+          } else {
+            db.collection('users').doc(user.uid).set(state);
           }
-        } else {
-          db.collection('users').doc(user.uid).set(state);
-        }
-      });
+        }, error => {
+          console.error("Erro de permissão no Firestore:", error);
+          alert("O login funcionou, mas o banco de dados bloqueou o acesso. Verifique as Regras do Firestore!");
+        });
+      } catch(e) {
+        console.error("Erro geral Firestore:", e);
+      }
       
       $('sync').textContent = 'Sincronizado';
       $('sync').dataset.mode = 'cloud';
@@ -407,14 +413,12 @@ function touch() {
 function renderAll() {
   const t = state.settings?.theme || 'auto';
   if(t==='auto') document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme',t);
-  
   $('opening').value = state.opening ? String(state.opening).replace('.',',') : '';
   $('lim-g').value = state.limits?.g ? String(state.limits.g).replace('.',',') : '';
   $('lim-l').value = state.limits?.l ? String(state.limits.l).replace('.',',') : '';
   $('lim-y').value = state.limits?.y ? String(state.limits.y).replace('.',',') : '';
   $('lim-r').value = state.limits?.r ? String(state.limits.r).replace('.',',') : '';
   document.querySelectorAll('input[name="theme"]').forEach(r => r.checked = (r.value === t));
-
   renderMonth(); renderDay(); renderBudget(); renderTags(); renderCost();
 }
 
@@ -432,7 +436,6 @@ function renderMonth() {
   $('monthTitle').textContent = MONTHS[view.m]+' '+view.y;
   const first = new Date(view.y,view.m,1).getDay(), dim = daysIn(view.y,view.m);
   let bal = state.opening || 0, h='';
-  
   for(let i=0; i<first; i++) h+='<span></span>';
   for(let d=1; d<=dim; d++) {
     const k = key(view.y,view.m,d);
