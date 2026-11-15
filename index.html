@@ -108,7 +108,7 @@ select.fld { appearance: none; }
 table.rows { width: 100%; border-collapse: collapse; }
 table.rows td { padding: 8px 0; border-bottom: 1px solid var(--line-soft); }
 table.rows td.v { text-align: right; font: 500 14px var(--font-num); }
-.x-btn { width: 40px; height: 40px; border: 0; background: transparent; color: var(--muted); border-radius: 50%; cursor: pointer; font-size: 20px; }
+.x-btn { width: 40px; height: 40px; border: 0; background: transparent; color: var(--muted); border-radius: 50%; cursor: pointer; font-size: 20px; display: inline-flex; align-items: center; justify-content: center; }
 .x-btn:hover { color: var(--danger); background: var(--accent-soft); }
 .badge { display: inline-block; margin-left: 6px; font-size: 11px; font-weight: 600; color: var(--muted); border: 1px solid var(--line); border-radius: 5px; padding: 1px 6px; }
 
@@ -180,14 +180,49 @@ table.rows td.v { text-align: right; font: 500 14px var(--font-num); }
         <section class="day" id="dayPanel"></section>
       </div>
     </div>
-    <div class="pane" id="viewBudget" hidden><section class="card"><h2>Gastos do mês</h2><div id="catList"></div><form id="budgetForm" style="display:flex;gap:8px"><input class="fld" id="cat-name" placeholder="Comida"><input class="fld money" id="cat-val" placeholder="500,00"><button class="btn primary">Adicionar</button></form><div id="budgetOut"></div></section></div>
+
+    <div class="pane" id="viewBudget" hidden>
+      <section class="card">
+        <h2>Gasto Diário</h2>
+        <p class="muted">Cadastre o valor que você pode gastar por mês. O app divide pelos dias.</p>
+        <div id="catList"></div>
+        <form id="budgetForm" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+          <input class="fld" id="cat-name" placeholder="Comida" style="flex:1; min-width:140px">
+          <input class="fld money" id="cat-val" placeholder="500,00" style="flex:1; min-width:100px">
+          <button class="btn primary" id="btn-budget-submit">Adicionar</button>
+        </form>
+        <div id="budgetOut" style="margin-top:16px"></div>
+      </section>
+    </div>
+
     <div class="pane" id="viewCost" hidden><div class="card"><h2>Custo de Vida</h2><div id="costContent"></div></div></div>
     <div class="pane" id="viewTags" hidden><div class="card"><h2>Gastos por Tag</h2><div id="tagsContent"></div></div></div>
+    
     <div class="pane" id="viewSettings" hidden>
       <div class="settings-grid">
-        <section class="card span-all" style="border-color:var(--accent)"><h2>Conta</h2><p class="muted">Logado como: <strong id="user-email" style="color:var(--fg)"></strong></p><button class="btn" id="btn-logout" style="color:var(--danger);border-color:var(--danger);margin-top:8px">Sair da conta</button></section>
-        <section class="card"><h2>Aparência</h2><div class="seg-control"><label class="seg"><input type="radio" name="theme" value="auto"><span>Automático</span></label><label class="seg"><input type="radio" name="theme" value="light"><span>Claro</span></label><label class="seg"><input type="radio" name="theme" value="dark"><span>Escuro</span></label></div></section>
-        <section class="card span-all"><h2>Saldo Inicial e Faixas</h2><div class="set-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><label>Saldo Inicial<input class="fld money" id="opening"></label><label>Verde Forte ≥<input class="fld money" id="lim-g"></label><label>Verde Claro ≥<input class="fld money" id="lim-l"></label><label>Amarelo ≥<input class="fld money" id="lim-y"></label><label>Verm. Claro ≥<input class="fld money" id="lim-r"></label></div></section>
+        <section class="card span-all" style="border-color:var(--accent)">
+          <h2>Conta</h2>
+          <p class="muted">Logado como: <strong id="user-email" style="color:var(--fg)"></strong></p>
+          <button class="btn" id="btn-logout" style="color:var(--danger);border-color:var(--danger);margin-top:8px">Sair da conta</button>
+        </section>
+        <section class="card">
+          <h2>Aparência</h2>
+          <div class="seg-control">
+            <label class="seg"><input type="radio" name="theme" value="auto"><span>Automático</span></label>
+            <label class="seg"><input type="radio" name="theme" value="light"><span>Claro</span></label>
+            <label class="seg"><input type="radio" name="theme" value="dark"><span>Escuro</span></label>
+          </div>
+        </section>
+        <section class="card span-all">
+          <h2>Saldo Inicial e Faixas</h2>
+          <div class="set-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <label>Saldo Inicial<input class="fld money" id="opening"></label>
+            <label>Verde Forte ≥<input class="fld money" id="lim-g"></label>
+            <label>Verde Claro ≥<input class="fld money" id="lim-l"></label>
+            <label>Amarelo ≥<input class="fld money" id="lim-y"></label>
+            <label>Verm. Claro ≥<input class="fld money" id="lim-r"></label>
+          </div>
+        </section>
       </div>
     </div>
   </main>
@@ -254,6 +289,7 @@ let state = normalize(JSON.parse(localStorage.getItem(LS_KEY) || 'null'));
 let sel = todayKey();
 let view = {y: parseKey(sel).y, m: parseKey(sel).m};
 let ui = {isRegistering: false, tab: 'cal'};
+let editingBudgetId = null; // Variável para controlar a edição
 
 function touch() { 
   localStorage.setItem(LS_KEY, JSON.stringify(state)); 
@@ -436,14 +472,64 @@ $('dayPanel').addEventListener('change', e => {
 
 /* Orçamento, Tags e Custo de Vida */
 function renderBudget() {
-  const cats = state.budget.cats; let h = cats.map(c => '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line-soft)"><span>'+esc(c.name)+'</span><strong>'+BRL.format(c.valor)+'</strong></div>').join('');
-  if(!cats.length) h = '<p class="muted">Nenhum gasto.</p>'; else h += '<p style="text-align:right;margin-top:8px;font-weight:bold">Total: '+BRL.format(monthlyTotal())+'</p>';
+  const cats = state.budget.cats; 
+  let h = cats.map(c => `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--line-soft)">
+      <div>
+        <div style="font-weight:500;font-size:15px">${esc(c.name)}</div>
+        <div class="muted num" style="font-size:13px">${BRL.format(c.valor)}/mês</div>
+      </div>
+      <div style="display:flex;gap:4px">
+        <button class="x-btn" onclick="editBudget('${c.id}')" style="color:var(--accent);border:1px solid var(--line)" title="Editar">✎</button>
+        <button class="x-btn" onclick="delBudget('${c.id}')" style="color:var(--danger);border:1px solid var(--line)" title="Excluir">×</button>
+      </div>
+    </div>`).join('');
+    
+  if(!cats.length) {
+    h = '<p class="muted" style="text-align:center;padding:20px 0">Nenhum gasto cadastrado.</p>'; 
+  } else {
+    h += '<div style="display:flex;justify-content:space-between;margin-top:16px;padding-top:16px;border-top:1px solid var(--line);font-weight:bold"><span>Total mensal</span><span>'+BRL.format(monthlyTotal())+'</span></div>';
+    h += '<p class="muted" style="font-size:12px;margin-top:8px">O app estima '+BRL.format(monthlyTotal()/30)+' por dia.</p>';
+  }
   $('catList').innerHTML = h;
 }
 
+window.delBudget = (id) => {
+  if(confirm('Tem certeza que deseja apagar este gasto?')) {
+    state.budget.cats = state.budget.cats.filter(c => c.id !== id);
+    if(editingBudgetId === id) { editingBudgetId = null; $('btn-budget-submit').textContent = 'Adicionar'; $('cat-name').value = ''; $('cat-val').value = ''; }
+    touch(); renderAll();
+  }
+};
+
+window.editBudget = (id) => {
+  const c = state.budget.cats.find(x => x.id === id);
+  if(!c) return;
+  $('cat-name').value = c.name;
+  $('cat-val').value = String(c.valor).replace('.', ',');
+  editingBudgetId = id;
+  $('btn-budget-submit').textContent = 'Salvar Edição';
+  window.scrollTo({top: 0, behavior: 'smooth'});
+};
+
 $('budgetForm').onsubmit = e => {
-  e.preventDefault(); const name = $('cat-name').value, val = parseMoney($('cat-val').value);
-  if(!name || isNaN(val)) return; state.budget.cats.push({id:uid(), name, valor:val}); $('cat-name').value=''; $('cat-val').value=''; touch(); renderAll();
+  e.preventDefault(); 
+  const name = $('cat-name').value.trim(); 
+  const val = parseMoney($('cat-val').value);
+  
+  if(!name || isNaN(val) || val <= 0) return alert('Preencha nome e valor corretamente.');
+  
+  if(editingBudgetId) {
+    const c = state.budget.cats.find(x => x.id === editingBudgetId);
+    if(c) { c.name = name; c.valor = val; }
+    editingBudgetId = null;
+    $('btn-budget-submit').textContent = 'Adicionar';
+  } else {
+    state.budget.cats.push({id:uid(), name, valor:val}); 
+  }
+  
+  $('cat-name').value=''; $('cat-val').value=''; 
+  touch(); renderAll();
 };
 
 function renderTags() {
